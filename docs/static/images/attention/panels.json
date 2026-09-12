@@ -1,0 +1,21 @@
+{
+  "run": "run_20260910_203935",
+  "combo": 4,
+  "epochs": 80,
+  "seed": 6311,
+  "fold": 0,
+  "specimens": [
+    {
+      "image_id": "HO_92",
+      "measured_gpa": 2.2723
+    },
+    {
+      "image_id": "HO_67",
+      "measured_gpa": 2.4187
+    },
+    {
+      "image_id": "HO_46",
+      "measured_gpa": 2.9802
+    }
+  ]
+}

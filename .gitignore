@@ -1,0 +1,11 @@
+.venv/
+dataset/
+dss_2205/
+runs/
+.DS_Store
+wandb/
+__pycache__/
+*.pyc
+im2prop.egg-info/
+IM2PROP_data/HO_mask/
+IM2PROP_data/IM2PROP_dataset_homo_ratio_v1.csv

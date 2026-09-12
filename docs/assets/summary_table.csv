@@ -1,0 +1,49 @@
+group_label,NUM_EPOCHS,n_runs,mean_test_mae,std_test_mae,mean_test_rmse
+"Combo 1
+Baseline",30,3,0.2312,0.0615,0.5237
+"Combo 1
+Baseline",50,3,0.2227,0.0551,0.5263
+"Combo 1
+Baseline",80,3,0.2011,0.0584,0.4904
+"Combo 2
++Phase feat",30,3,0.2378,0.0996,0.6982
+"Combo 2
++Phase feat",50,3,0.2197,0.0538,0.5318
+"Combo 2
++Phase feat",80,3,0.1933,0.008,0.3005
+"Combo 3
++Attention",30,3,0.2034,0.0313,0.3221
+"Combo 3
++Attention",50,3,0.2192,0.0274,0.4582
+"Combo 3
++Attention",80,3,0.2261,0.0863,0.6674
+"Combo 4
++Attn+feat",30,3,0.1872,0.0103,0.2695
+"Combo 4
++Attn+feat",50,3,0.2166,0.0429,0.4763
+"Combo 4
++Attn+feat",80,3,0.1754,0.0065,0.2905
+"Combo 5
++Ratios",30,3,0.2,0.0213,0.323
+"Combo 5
++Ratios",50,3,0.1828,0.0214,0.3128
+"Combo 5
++Ratios",80,3,0.1827,0.0278,0.2908
+"Combo 6
++Ratio+feat",30,3,0.2335,0.0396,0.5139
+"Combo 6
++Ratio+feat",50,3,0.2275,0.0722,0.5442
+"Combo 6
++Ratio+feat",80,3,0.2272,0.0705,0.5355
+"Combo 7
++Ratio+attn",30,3,0.203,0.0028,0.3089
+"Combo 7
++Ratio+attn",50,3,0.2241,0.0331,0.5102
+"Combo 7
++Ratio+attn",80,3,0.176,0.0192,0.2963
+"Combo 8
+Full IM2PROP",30,3,0.1949,0.0138,0.3277
+"Combo 8
+Full IM2PROP",50,3,0.2024,0.0127,0.3431
+"Combo 8
+Full IM2PROP",80,3,0.1807,0.0129,0.2886

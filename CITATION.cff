@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: "If you use this software or dataset, please cite the paper below."
+title: "IM2PROP"
+abstract: >-
+  A tri-branch deep learning regression framework that predicts local
+  Micro-Vickers hardness of S32205 duplex stainless steel directly from real
+  optical microscope images, fusing a MicroNet-pretrained ResNet50 encoder,
+  a phase-driven spatial attention mechanism derived from binary phase masks,
+  and macroscopic phase ratio inputs.
+type: software
+license: MIT
+repository-code: "https://github.com/JayChou04/IM2PROP"
+url: "https://jaychou04.github.io/IM2PROP/"
+keywords:
+  - materials informatics
+  - deep learning
+  - microstructure-property relationship
+  - duplex stainless steel
+  - Vickers hardness
+authors:
+  - family-names: Chou
+    given-names: Shih-Chieh
+    affiliation: "Department of Mechanical and Electro-Mechanical Engineering, National Sun Yat-sen University"
+  - family-names: Cheng
+    given-names: I-Chieh
+    affiliation: "Department of Materials and Optoelectronic Science, National Sun Yat-sen University"
+  - family-names: Li
+    given-names: Bo-Shiuan
+    affiliation: "Department of Mechanical and Electro-Mechanical Engineering, National Sun Yat-sen University"
+    email: bsli@mail.nsysu.edu.tw
+preferred-citation:
+  type: unpublished
+  title: "From Image to Properties: Deep Learning for Microstructure Property Prediction"
+  notes: "Manuscript"
+  url: "https://jaychou04.github.io/IM2PROP/"
+  year: 2026
+  authors:
+    - family-names: Chou
+      given-names: Shih-Chieh
+    - family-names: Cheng
+      given-names: I-Chieh
+    - family-names: Li
+      given-names: Bo-Shiuan

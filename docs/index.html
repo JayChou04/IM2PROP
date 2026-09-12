@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IM2PROP: From Image to Properties</title>
+<meta name="description" content="IM2PROP predicts the Micro-Vickers hardness of duplex stainless steel from optical micrographs with a tri-branch network.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="IM2PROP: From Image to Properties">
+<meta property="og:description" content="IM2PROP predicts the Micro-Vickers hardness of duplex stainless steel from optical micrographs with a tri-branch network.">
+<meta property="og:url" content="https://jaychou04.github.io/IM2PROP/">
+<meta property="og:image" content="https://jaychou04.github.io/IM2PROP/static/images/fig1.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="static/images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&family=Noto+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="static/css/site.css">
+<!--
+  Hand-made images in static/images/ (redo when the paper's figures change; needs poppler-utils).
+  Run the IM2PROP.pdf commands from docs/, the rest from the repo root:
+    fig1.png         pdfimages -png -f 1 -l 1 IM2PROP.pdf /tmp/p1          largest image, /tmp/p1-000.png
+    fig5.png         pdftoppm -png -r 400 -f 5 -l 5 -x 1755 -y 304 -W 1383 -H 1267 -singlefile IM2PROP.pdf static/images/fig5
+    fig4_roi.jpg     pdfimages -png -f 4 -l 4 IM2PROP.pdf /tmp/p4          744x838 image, cropped to its blue square, 720x720
+    paper_strip.jpg  pdftoppm -png -r 50 IM2PROP.pdf /tmp/page             nine pages side by side, 2000 px wide
+    paper_icon.jpg   page 1 of the strip, 160 px tall
+    om_*.jpg         byte copies of IM2PROP_data/HO_image/HO_{48,38,73}.jpg
+    mask_*.png       IM2PROP_data/HO_mask/HO_{48,38,73}_mask.jpg (made by uv run scripts/prepare_masks.py)
+                     with 255 -> #e2f1e9 (austenite) and 0 -> #0b6a52 (ferrite)
+    favicon.svg      hand-written (a Vickers diamond)
+    attention/       uv run scripts/export_attention_panels.py (needs the finished sweep in runs/)
+-->
+</head>
+<body>
+<div class="page">
+  <header class="masthead">
+    <h1>
+      <span class="title-main"><b>IM2PROP</b>: From Image to Properties</span>
+      <span class="title-sub">Deep Learning for Microstructure Property Prediction</span>
+    </h1>
+    <p class="authors">
+      <span>Shih-Chieh Chou<sup>1</sup></span>
+      <span>I-Chieh Cheng<sup>2</sup></span>
+      <span>Bo-Shiuan Li<sup>1</sup></span>
+    </p>
+    <p class="affil">
+      <sup>1</sup>Department of Mechanical and Electro-Mechanical Engineering, National Sun Yat-sen University<br>
+      <sup>2</sup>Department of Materials and Optoelectronic Science, National Sun Yat-sen University
+    </p>
+    <nav class="links" aria-label="Project links">
+      <a href="https://github.com/JayChou04/IM2PROP/blob/main/docs/IM2PROP.pdf">
+        <span class="ico"><img class="paper-ico" src="static/images/paper_icon.jpg" alt="" width="50" height="64"></span>
+        <span class="link-label">Paper</span>
+      </a>
+      <a href="https://github.com/JayChou04/IM2PROP">
+        <span class="ico">
+          <svg viewBox="0 0 16 16" width="58" height="58" aria-hidden="true"><path fill="currentColor" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg>
+        </span>
+        <span class="link-label">Code</span>
+      </a>
+      <a href="https://github.com/JayChou04/IM2PROP/tree/main/IM2PROP_data">
+        <span class="ico">
+          <svg class="ico-data" viewBox="0 0 48 56" width="50" height="58" aria-hidden="true">
+            <path class="body" d="M4 10v36c0 3.3 9 6 20 6s20-2.7 20-6V10z"></path>
+            <ellipse class="top" cx="24" cy="10" rx="20" ry="6"></ellipse>
+            <path class="band" d="M4 23c0 3.3 9 6 20 6s20-2.7 20-6M4 36c0 3.3 9 6 20 6s20-2.7 20-6"></path>
+          </svg>
+        </span>
+        <span class="link-label">Data</span>
+      </a>
+    </nav>
+  </header>
+
+  <p class="tldr"><b>TL;DR:</b> IM2PROP is a tri-branch network that predicts the Micro-Vickers hardness of duplex stainless steel from optical micrographs; its best configuration lowers cross-validated error by 12.7% against an RGB-only baseline.</p>
+
+  <figure>
+    <img class="fig-img" src="static/images/fig1.png" width="1514" height="792" alt="Framework overview: a micrograph goes through image processing into a phase mask; the micrograph feeds a MicroNet encoder, the mask feeds a PhaseCNN and the phase ratios, and all three meet in a regression head that predicts hardness.">
+    <figcaption>Three complementary branches — a MicroNet-pretrained encoder, a PhaseCNN with spatial attention, and macroscopic phase ratios — are fused to predict hardness.</figcaption>
+  </figure>
+
+  <section class="prose" aria-labelledby="h-abstract">
+    <h2 id="h-abstract">Abstract</h2>
+    <p>Predicting local mechanical properties from microstructural images is essential for reducing the experimental burden in materials development, yet existing deep learning approaches predominantly rely on synthetic training data, while domain-specific pretraining remains underexplored for image-based property regression. IM2PROP is a tri-branch regression framework that predicts the Micro-Vickers hardness of S32205 duplex stainless steel directly from real optical micrographs, fusing a MicroNet-pretrained ResNet50 encoder, a phase-driven spatial attention mechanism derived from binary phase masks, and macroscopic phase ratios. Its 94 samples are cropped with the expanding cavity model, so each image covers the plastic zone the indent actually deformed. A full-factorial ablation evaluated with 5-fold cross-validation over 360 training runs shows that the best configuration reaches a mean absolute error of 0.175 GPa, 12.7% below the RGB-only baseline.</p>
+  </section>
+
+  <section aria-labelledby="h-roi">
+    <div class="prose">
+      <h2 id="h-roi">Sizing Each Sample</h2>
+      <p>A hardness value describes only the material the indent deformed, so each micrograph is cropped to that region. The expanding cavity model of Mata et al. treats the indentation as a spherical cavity inflating in an elastic–perfectly-plastic solid, which turns the indent’s two measured diagonals into the radius of its plastic zone at the surface. Averaged over all 94 indents that radius is 121 µm, so every sample is a 720 × 720 px square centred on the indent, large enough to hold the whole zone. The micrographs deliberately leave out the indent itself, whose size alone would give away the hardness. The steps below follow <a href="https://github.com/JayChou04/IM2PROP/blob/main/docs/IM2PROP.pdf">Appendix A of the paper</a> for one representative indent.</p>
+    </div>
+    <div class="roi" id="roi">
+      <svg viewBox="0 0 720 720" role="img" aria-labelledby="roi-desc">
+        <desc id="roi-desc">A Vickers indent drawn to scale, its equivalent contact circle, the expanding plastic zone and the 720 by 720 pixel crop that contains it, ending on the real micrograph from the paper’s Fig. 4.</desc>
+        <image class="s on" data-from="7" href="static/images/fig4_roi.jpg" x="0" y="0" width="720" height="720"></image>
+        <rect class="s" data-from="1" data-to="6" width="720" height="720" fill="#f4f5f6"></rect>
+        <polygon class="s" data-from="1" data-to="6" points="230.06,360 360,229.79 489.94,360 360,490.21" fill="#2f3439" fill-opacity="0.08" stroke="#2f3439" stroke-width="3"></polygon>
+        <polygon class="s" data-from="2" data-to="6" points="230.06,360 360,229.79 489.94,360 360,490.21" fill="#2f3439"></polygon>
+        <g class="s" data-from="1" data-to="2" stroke="#3273dc" stroke-width="3">
+          <line x1="230.06" y1="360" x2="489.94" y2="360"></line>
+          <line x1="360" y1="229.79" x2="360" y2="490.21"></line>
+        </g>
+        <text class="s lbl" data-from="1" data-to="2" x="500" y="369">d<tspan dy="7" font-size="18">1</tspan><tspan dy="-7"> = 87.35 µm</tspan></text>
+        <text class="s lbl" data-from="1" data-to="2" x="360" y="212" text-anchor="middle">d<tspan dy="7" font-size="18">2</tspan><tspan dy="-7"> = 87.53 µm</tspan></text>
+        <circle class="s" data-from="3" data-to="5" cx="360" cy="360" r="103.78" fill="none" stroke="#3273dc" stroke-width="3" stroke-dasharray="10 8"></circle>
+        <text class="s lbl" data-from="3" data-to="3" x="360" y="526" text-anchor="middle">a<tspan dy="7" font-size="18">s</tspan><tspan dy="-7"> = 34.88 µm</tspan></text>
+        <circle class="s" data-from="4" data-to="5" cx="360" cy="360" r="163.46" fill="none" stroke="#7a7a7a" stroke-width="3" stroke-dasharray="2 8" stroke-linecap="round"></circle>
+        <text class="s lbl" data-from="4" data-to="4" x="360" y="556" text-anchor="middle">R = 54.94 µm</text>
+        <g transform="translate(360 360)">
+          <g class="s grow" data-from="5" data-to="6">
+            <circle r="364.46" fill="none" stroke="#5cb85c" stroke-width="6"></circle>
+            <line class="s" data-from="5" data-to="5" x1="0" y1="0" x2="298.55" y2="-209.05" stroke="#5cb85c" stroke-width="3"></line>
+          </g>
+        </g>
+        <text class="s lbl late" data-from="5" data-to="5" x="530" y="184" text-anchor="middle">C<tspan dy="7" font-size="18">s</tspan><tspan dy="-7"> = 122.5 µm</tspan></text>
+        <rect class="s" data-from="6" data-to="6" x="3" y="3" width="714" height="714" fill="none" stroke="#5dade2" stroke-width="6"></rect>
+        <text class="s lbl" data-from="6" data-to="6" x="530" y="184" text-anchor="middle">mean C<tspan dy="7" font-size="18">s</tspan><tspan dy="-7"> = 121 µm</tspan></text>
+        <text class="s lbl on" data-from="6" data-to="7" x="360" y="46" text-anchor="middle">720 × 720 px</text>
+        <text class="s lbl on" data-from="7" data-to="7" x="20" y="700">Paper Fig. 4</text>
+      </svg>
+      <ol class="roi-steps">
+        <li><button type="button" data-go="1"><span class="num-badge">1</span><span><span class="step-name">Measure the indent</span><span class="eq"><i>d</i> = (<i>d</i><sub>1</sub> + <i>d</i><sub>2</sub>) / 2 = 87.44&nbsp;µm</span></span></button></li>
+        <li><button type="button" data-go="2"><span class="num-badge">2</span><span><span class="step-name">Hardness and yield stress</span><span class="eq"><i>H</i> = 18.1848523 <i>F</i> / (1000 <i>d</i><sub>mm</sub><sup>2</sup>) = 2.378&nbsp;GPa; <i>σ</i><sub>ys</sub> = <i>H</i> / 2.57 = 0.925&nbsp;GPa</span></span></button></li>
+        <li><button type="button" data-go="3"><span class="num-badge">3</span><span><span class="step-name">Equivalent contact radius</span><span class="eq"><i>A</i><sub>c</sub> = <i>d</i><sup>2</sup> / 2 = 3,822.9&nbsp;µm<sup>2</sup>; <i>a</i><sub>s</sub> = √(<i>A</i><sub>c</sub> / π) = 34.88&nbsp;µm</span></span></button></li>
+        <li><button type="button" data-go="4"><span class="num-badge">4</span><span><span class="step-name">Equivalent spherical cavity</span><span class="eq"><i>R</i> = <i>a</i><sub>s</sub> / 0.635 = 54.94&nbsp;µm; <i>c</i> = <i>R</i> exp[(<i>H</i> / <i>fσ</i><sub>ys</sub> − 2/3) / 2] = 129.51&nbsp;µm, <i>f</i> = 1.079</span></span></button></li>
+        <li><button type="button" data-go="5"><span class="num-badge">5</span><span><span class="step-name">Surface plastic zone</span><span class="eq"><i>C</i><sub>s</sub> = <i>R</i> √((<i>c</i> / <i>R</i>)<sup>2</sup> − 0.5868) = 122.5&nbsp;µm</span></span></button></li>
+        <li><button type="button" data-go="6"><span class="num-badge">6</span><span><span class="step-name">Crop</span><span class="eq">Mean <i>C</i><sub>s</sub> over 94 indents = 121&nbsp;µm → 720&nbsp;×&nbsp;720&nbsp;px square</span></span></button></li>
+        <li><button type="button" data-go="7" aria-current="step"><span class="num-badge">7</span><span><span class="step-name">On a real indent</span><span class="eq">Paper Fig. 4: indent (black), plastic zone (green), crop (blue)</span></span></button></li>
+      </ol>
+    </div>
+    <div class="roi-controls">
+      <button class="btn" id="roi-play" type="button">Play</button>
+      <span class="fine">Worked example from Appendix A: <i>d</i><sub>1</sub> = 87.35 µm, <i>d</i><sub>2</sub> = 87.53 µm, <i>F</i> = 1 kgf.</span>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-mask">
+    <div class="prose">
+      <h2 id="h-mask">From Micrograph to Phase Mask</h2>
+      <p>Six image-processing stages — median denoising, background normalization, CLAHE contrast enhancement, Otsu binarization, morphological refinement and small-region filtering — turn each micrograph into a binary map of its two phases. The mask feeds the PhaseCNN branch, and its pixel counts give the phase ratios. The three specimens below sit at the low, typical and high end of the austenite fraction; drag any divider to compare all three.</p>
+    </div>
+    <div class="trio">
+      <figure>
+        <div class="compare">
+          <img src="static/images/mask_ho48.png" width="720" height="720" alt="Phase mask of specimen HO_48.">
+          <img class="top" src="static/images/om_ho48.jpg" width="720" height="720" alt="Optical micrograph of specimen HO_48.">
+          <span class="side-label left">Micrograph</span>
+          <span class="side-label right">Mask</span>
+          <span class="divider" aria-hidden="true"></span>
+          <span class="knob" aria-hidden="true"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"></path></svg></span>
+          <input class="compare-pos" id="compare-ho48" type="range" min="0" max="100" value="50" aria-label="Divider for specimen HO_48">
+        </div>
+        <figcaption class="specimen"><span><b>HO_48</b> · 2.66 GPa</span><span>austenite 48.4% · ferrite 51.6%</span></figcaption>
+      </figure>
+      <figure>
+        <div class="compare">
+          <img src="static/images/mask_ho38.png" width="720" height="720" alt="Phase mask of specimen HO_38.">
+          <img class="top" src="static/images/om_ho38.jpg" width="720" height="720" alt="Optical micrograph of specimen HO_38.">
+          <span class="side-label left">Micrograph</span>
+          <span class="side-label right">Mask</span>
+          <span class="divider" aria-hidden="true"></span>
+          <span class="knob" aria-hidden="true"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"></path></svg></span>
+          <input class="compare-pos" id="compare-ho38" type="range" min="0" max="100" value="50" aria-label="Divider for specimen HO_38">
+        </div>
+        <figcaption class="specimen"><span><b>HO_38</b> · 2.42 GPa</span><span>austenite 62.8% · ferrite 37.2%</span></figcaption>
+      </figure>
+      <figure>
+        <div class="compare">
+          <img src="static/images/mask_ho73.png" width="720" height="720" alt="Phase mask of specimen HO_73.">
+          <img class="top" src="static/images/om_ho73.jpg" width="720" height="720" alt="Optical micrograph of specimen HO_73.">
+          <span class="side-label left">Micrograph</span>
+          <span class="side-label right">Mask</span>
+          <span class="divider" aria-hidden="true"></span>
+          <span class="knob" aria-hidden="true"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"></path></svg></span>
+          <input class="compare-pos" id="compare-ho73" type="range" min="0" max="100" value="50" aria-label="Divider for specimen HO_73">
+        </div>
+        <figcaption class="specimen"><span><b>HO_73</b> · 2.42 GPa</span><span>austenite 77.5% · ferrite 22.5%</span></figcaption>
+      </figure>
+    </div>
+    <p class="key">
+      <span><span class="sw sw-a"></span>austenite (FCC, light phase)</span>
+      <span><span class="sw sw-f"></span>ferrite (BCC, dark phase)</span>
+    </p>
+  </section>
+
+  <section aria-labelledby="h-arch">
+    <div class="prose">
+      <h2 id="h-arch">Architecture</h2>
+      <p>Three branches read the same specimen at different scales. Three components can be switched off independently — phase ratios (R), phase attention (A) and PhaseCNN features (F) — while the rest of the network stays identical: a disabled branch is zeroed rather than removed, and a disabled attention gate passes the encoder’s features through unchanged. That gives the eight configurations in the results.</p>
+    </div>
+    <div class="arch">
+      <figure>
+        <img class="fig-img" src="static/images/fig5.png" width="1383" height="1267" alt="Detailed architecture: ResNet50 encoder on the RGB image, PhaseCNN on the binary phase mask with a phase-attention gate, and phase ratios, concatenated to 2178 dimensions and passed to a regression head.">
+      </figure>
+      <ul class="legend">
+        <li><span class="chip c-rgb"></span><p><b>MicroNet encoder.</b> A ResNet50 pretrained on micrographs and kept frozen; 2048-d RGB features.</p></li>
+        <li><span class="chip c-phase"></span><p><b>PhaseCNN (F).</b> Three convolution layers on the phase mask; 128-d phase features.</p></li>
+        <li><span class="chip c-attn"></span><p><b>Phase attention (A).</b> A 1×1 convolution and sigmoid that re-weights the encoder’s feature map.</p></li>
+        <li><span class="chip c-io"></span><p><b>Phase ratios (R).</b> Austenite and ferrite fractions; 2-d.</p></li>
+        <li><span class="chip c-fuse"></span><p><b>Fusion.</b> Concatenated to 2178-d and mapped to hardness in GPa by a five-layer head.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-cam">
+    <div class="prose">
+      <h2 id="h-cam">Where the Model Looks</h2>
+      <p>The phase-attention gate turns the PhaseCNN’s reading of the phase mask into a map between 0 and 1 that re-weights the encoder’s features. Each slide puts that map beside the micrograph it was computed from. The three specimens have the lowest, median and highest measured hardness among the 19 held-out specimens of one cross-validation fold of the best configuration (Combo 4, 80 epochs), and each map’s colors are stretched to its own range, so compare regions within a slide rather than across slides.</p>
+    </div>
+    <div class="attn">
+      <figure class="attn-slide">
+        <div class="attn-pair">
+          <div class="attn-cell"><img src="static/images/attention/HO_92_micrograph.jpg" width="720" height="720" alt="Optical micrograph of specimen HO_92."><span class="side-label left">Micrograph</span></div>
+          <div class="attn-cell"><img src="static/images/attention/HO_92_attention.jpg" width="720" height="720" alt="Phase-attention map over specimen HO_92."><span class="side-label left">Phase attention</span></div>
+        </div>
+        <figcaption><b>HO_92</b> · measured 2.27 GPa</figcaption>
+      </figure>
+      <figure class="attn-slide" hidden>
+        <div class="attn-pair">
+          <div class="attn-cell"><img src="static/images/attention/HO_67_micrograph.jpg" width="720" height="720" alt="Optical micrograph of specimen HO_67."><span class="side-label left">Micrograph</span></div>
+          <div class="attn-cell"><img src="static/images/attention/HO_67_attention.jpg" width="720" height="720" alt="Phase-attention map over specimen HO_67."><span class="side-label left">Phase attention</span></div>
+        </div>
+        <figcaption><b>HO_67</b> · measured 2.42 GPa</figcaption>
+      </figure>
+      <figure class="attn-slide" hidden>
+        <div class="attn-pair">
+          <div class="attn-cell"><img src="static/images/attention/HO_46_micrograph.jpg" width="720" height="720" alt="Optical micrograph of specimen HO_46."><span class="side-label left">Micrograph</span></div>
+          <div class="attn-cell"><img src="static/images/attention/HO_46_attention.jpg" width="720" height="720" alt="Phase-attention map over specimen HO_46."><span class="side-label left">Phase attention</span></div>
+        </div>
+        <figcaption><b>HO_46</b> · measured 2.98 GPa</figcaption>
+      </figure>
+      <p class="attn-scale"><span>Low</span><span class="ramp" aria-hidden="true"></span><span>High attention</span></p>
+      <div class="attn-nav">
+        <button class="nav-btn" id="attn-prev" type="button" aria-label="Previous specimen">←</button>
+        <span id="attn-count" aria-live="polite">1 / 3</span>
+        <button class="nav-btn" id="attn-next" type="button" aria-label="Next specimen">→</button>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-results">
+    <div class="prose">
+      <h2 id="h-results">Results</h2>
+      <p>Mean absolute error in GPa from 5-fold cross-validation repeated three times, pooled over all 94 specimens. Lower is better.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col" class="num">#</th>
+            <th scope="col">Configuration</th>
+            <th scope="col" class="flag">R</th>
+            <th scope="col" class="flag">A</th>
+            <th scope="col" class="flag">F</th>
+            <th scope="col" class="num">30 epochs</th>
+            <th scope="col" class="num">50 epochs</th>
+            <th scope="col" class="num">80 epochs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="base"><td class="num">1</td><td>Baseline (RGB only)</td><td class="flag"><span class="dot"></span><span class="sr">off</span></td><td class="flag"><span class="dot"></span><span class="sr">off</span></td><td class="flag"><span class="dot"></span><span class="sr">off</span></td><td class="num">0.2312</td><td class="num">0.2227</td><td class="num">0.2011</td></tr>
+          <tr><td class="num">2</td><td>+ Phase features</td><td class="flag"><span class="dot"></span><span class="sr">off</span></td><td class="flag"><span class="dot"></span><span class="sr">off</span></td><td class="flag"><span class="dot f"></span><span class="sr">on</span></td><td class="num">0.2378</td><td class="num">0.2197</td><td class="num">0.1933</td></tr>
+          <tr><td class="num">3</td><td>+ Attention</td><td class="flag"><span class="dot"></span><span class="sr">off</span></td><td class="flag"><span class="dot a"></span><span class="sr">on</span></td><td class="flag"><span class="dot"></span><span class="sr">off</span></td><td class="num">0.2034</td><td class="num">0.2192</td><td class="num">0.2261</td></tr>
+          <tr><td class="num">4</td><td>+ Attention + phase features</td><td class="flag"><span class="dot"></span><span class="sr">off</span></td><td class="flag"><span class="dot a"></span><span class="sr">on</span></td><td class="flag"><span class="dot f"></span><span class="sr">on</span></td><td class="num">0.1872</td><td class="num">0.2166</td><td class="num best">0.1754</td></tr>
+          <tr><td class="num">5</td><td>+ Phase ratios</td><td class="flag"><span class="dot r"></span><span class="sr">on</span></td><td class="flag"><span class="dot"></span><span class="sr">off</span></td><td class="flag"><span class="dot"></span><span class="sr">off</span></td><td class="num">0.2000</td><td class="num">0.1828</td><td class="num">0.1827</td></tr>
+          <tr><td class="num">6</td><td>+ Ratios + phase features</td><td class="flag"><span class="dot r"></span><span class="sr">on</span></td><td class="flag"><span class="dot"></span><span class="sr">off</span></td><td class="flag"><span class="dot f"></span><span class="sr">on</span></td><td class="num">0.2335</td><td class="num">0.2275</td><td class="num">0.2272</td></tr>
+          <tr><td class="num">7</td><td>+ Ratios + attention</td><td class="flag"><span class="dot r"></span><span class="sr">on</span></td><td class="flag"><span class="dot a"></span><span class="sr">on</span></td><td class="flag"><span class="dot"></span><span class="sr">off</span></td><td class="num">0.2030</td><td class="num">0.2241</td><td class="num">0.1760</td></tr>
+          <tr><td class="num">8</td><td>Full IM2PROP</td><td class="flag"><span class="dot r"></span><span class="sr">on</span></td><td class="flag"><span class="dot a"></span><span class="sr">on</span></td><td class="flag"><span class="dot f"></span><span class="sr">on</span></td><td class="num">0.1949</td><td class="num">0.2024</td><td class="num">0.1807</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="key">
+      <span><span class="dot r"></span>R phase ratios</span>
+      <span><span class="dot a"></span>A phase attention</span>
+      <span><span class="dot f"></span>F PhaseCNN features</span>
+    </p>
+    <div class="prose">
+      <p>Lowest error: <b>+ Attention + phase features at 80 epochs, 0.1754 GPa</b> — 12.7% below the RGB-only baseline at the same setting (0.2011 GPa).</p>
+    </div>
+    <figure>
+      <img class="fig-img" src="assets/fig1_test_mae_comparison.png" width="2385" height="1034" alt="Chart of cross-validated MAE for all eight configurations at 30, 50 and 80 epochs.">
+      <figcaption>Cross-validated MAE for every configuration and training length, as rendered by reproduce.sh.</figcaption>
+    </figure>
+  </section>
+
+  <section class="prose" aria-labelledby="h-repro">
+    <h2 id="h-repro">Reproduce</h2>
+    <p>One script recomputes every number in the results table, and the chart, from the 94 source images — about 15 hours on a single CUDA GPU, or about 5 with <code>--repeats 1</code>. <a href="https://github.com/JayChou04/IM2PROP#reproduce">Full instructions are in the README.</a></p>
+    <pre><code>git clone https://github.com/JayChou04/IM2PROP.git
+cd IM2PROP &amp;&amp; uv sync
+bash reproduce.sh</code></pre>
+  </section>
+
+  <section aria-labelledby="h-paper">
+    <div class="prose">
+      <h2 id="h-paper">Paper</h2>
+      <p>The latest version lives in the GitHub repository and is updated as the work evolves.</p>
+    </div>
+    <a class="paper" href="https://github.com/JayChou04/IM2PROP/blob/main/docs/IM2PROP.pdf">
+      <img src="static/images/paper_strip.jpg" width="2000" height="277" alt="All nine pages of the paper; opens the PDF on GitHub.">
+    </a>
+  </section>
+
+  <section class="prose" aria-labelledby="h-cite">
+    <h2 id="h-cite">BibTeX</h2>
+    <div class="bib">
+      <button class="copy" id="copy-bibtex" type="button">Copy</button>
+      <pre id="bibtex">@unpublished{chou2026im2prop,
+  title  = {From Image to Properties: Deep Learning for
+            Microstructure Property Prediction},
+  author = {Chou, Shih-Chieh and Cheng, I-Chieh and Li, Bo-Shiuan},
+  note   = {Manuscript},
+  year   = {2026},
+  url    = {https://jaychou04.github.io/IM2PROP/}
+}</pre>
+    </div>
+  </section>
+
+  <section class="prose" aria-labelledby="h-ack">
+    <h2 id="h-ack">Acknowledgements</h2>
+    <p>Supported by the College Student Research Grant, National Science and Technology Council (NSTC), Taiwan, under Grant No. 114-2813-C-110-052-E.</p>
+    <p class="fine">Page design inspired by <a href="https://jonbarron.info/zipnerf/">Zip-NeRF</a>, <a href="https://bakedsdf.github.io/">BakedSDF</a>, <a href="https://adaptive-compliance.github.io/">Adaptive Compliance Policy</a> and <a href="https://haian-jin.github.io/ZipMap/">ZipMap</a>.</p>
+  </section>
+
+  <footer class="fine page-foot">Code and page released under the MIT License.</footer>
+</div>
+<script src="static/js/site.js"></script>
+</body>
+</html>

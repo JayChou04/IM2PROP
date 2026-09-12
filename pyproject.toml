@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "im2prop"
+version = "0.1.0"
+description = "Predict Micro-Vickers hardness of duplex stainless steel from optical micrographs (IM2PROP)"
+readme = "README.md"
+requires-python = ">=3.10, <3.13"
+dependencies = [
+    "torch",
+    "torchvision",
+    "numpy",
+    "pandas",
+    "matplotlib",
+    "opencv-python",
+    "scikit-learn",
+    "scipy",
+    "pillow",
+    "tqdm",
+    "wandb",
+    "albumentations",
+    "segmentation-models-pytorch",
+    "timm",
+    "scikit-image",
+    "pretrained-microscopy-models",
+    "seaborn>=0.13.2",
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["im2prop*"]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+pretrained-microscopy-models = { git = "https://github.com/nasa/pretrained-microscopy-models.git", rev = "9b7c4abc1321e81eca7a68d548e5371676fa74fa" }
+torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
